@@ -1,13 +1,13 @@
-package com.tofu.Lunch.Buddy;
+package com.tofu.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LunchBuddyApplication {
+public class ServerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(LunchBuddyApplication.class, args);
+		SpringApplication.run(ServerApplication.class, args);
 	}
 
 }
