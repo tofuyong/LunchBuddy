@@ -15,35 +15,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tofu.server.models.Preference;
-import com.tofu.server.service.PreferenceService;
+import com.tofu.server.models.Hobby;
+import com.tofu.server.service.HobbyService;
 
 @RestController
-@RequestMapping("api/preference")
-public class PreferenceController {
-    
-    @Autowired
-    PreferenceService prefSvc;
+@RequestMapping("api/hobby")
+public class HobbyController {
 
+    @Autowired
+    HobbyService hobbySvc;
+    
     @GetMapping("/all")
-    public ResponseEntity<List<Preference>> getAllPreferencesByEmployeeId(@RequestParam int employeeId) {
-        List<Preference> preferences = prefSvc.getAllPreferencesByEmployeeId(employeeId);
-        return ResponseEntity.ok(preferences);
+    public ResponseEntity<List<Hobby>> getAllHobbiesByEmployeeId(@RequestParam int employeeId) {
+        List<Hobby> hobbies = hobbySvc.getAllHobbiesByEmployeeId(employeeId);
+        return ResponseEntity.ok(hobbies);
     }
 
-    @GetMapping("/details/{preferenceId}")
-    public ResponseEntity<Preference> getPreference(@PathVariable String preferenceId) {
-        Preference preference = prefSvc.getPreference(preferenceId);
-        if (preference != null) {
-            return ResponseEntity.ok(preference); 
+    @GetMapping("/details/{hobbyId}")
+    public ResponseEntity<Hobby> getHobby(@PathVariable String hobbyId) {
+       Hobby hobby = hobbySvc.getHobby(hobbyId);
+        if (hobby != null) {
+            return ResponseEntity.ok(hobby); 
         } else {
             return ResponseEntity.notFound().build(); 
         }
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Boolean> insertPreference(@RequestBody Preference preference) {
-        boolean isInserted = prefSvc.insertPreference(preference);
+    public ResponseEntity<Boolean> insertHobby(@RequestBody Hobby hobby) {
+        boolean isInserted = hobbySvc.insertHobby(hobby);
         if (isInserted) {
             return ResponseEntity.ok(true);  
         } else {
@@ -51,9 +51,9 @@ public class PreferenceController {
         }
     }
     
-    @PutMapping("/update/{preferenceId}")
-    public ResponseEntity<Boolean> updatePreference(@RequestBody Preference preference, @PathVariable String preferenceId) {
-        boolean isUpdated = prefSvc.updatePreference(preference, preferenceId);
+    @PutMapping("/update/{hobbyId}")
+    public ResponseEntity<Boolean> updateHobby(@RequestBody Hobby hobby, @PathVariable String hobbyId) {
+        boolean isUpdated = hobbySvc.updateHobby(hobby, hobbyId);
         if (isUpdated) {
             return ResponseEntity.ok(true);  
         } else {
@@ -61,14 +61,14 @@ public class PreferenceController {
         }
     }
 
-    @DeleteMapping("/delete/{preferenceId}")
-    public ResponseEntity<Boolean> deletePreference(@PathVariable String preferenceId) {
-        boolean isDeleted = prefSvc.deletePreference(preferenceId);
+    @DeleteMapping("/delete/{hobbyId}")
+    public ResponseEntity<Boolean> deleteHobby(@PathVariable String hobbyId) {
+        boolean isDeleted = hobbySvc.deleteHobby(hobbyId);
         if (isDeleted) {
             return ResponseEntity.ok(true);  
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false); 
         }
     }
-    
+
 }
