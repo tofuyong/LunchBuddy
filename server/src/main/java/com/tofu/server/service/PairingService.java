@@ -77,7 +77,9 @@ public class PairingService {
                     potentialMatch.getPreferredTime().equals(request.getPreferredTime())) {
                     if (request.getPreferredGender().equals("No Preference") ||
                         potentialMatch.getPreferredGender().equals(request.getPreferredGender())) {
-                        potentialMatches.add(potentialMatch);
+                        if(!pairingRepo.hasPairedBeforeInLastSixMonths(request.getEmployeeId(), potentialMatch.getEmployeeId())) {
+                            potentialMatches.add(potentialMatch);
+                        }
                     }
                 }
             }
@@ -105,6 +107,7 @@ public class PairingService {
         newPairing.setLunchTime(request.getPreferredTime());
         newPairing.setLunchVenue("Office Cafe");
 
+        // Create pairingId
         String lastPairingId = pairingRepo.getLastPairingId();
         String newPairingId;
         if (lastPairingId != null) {

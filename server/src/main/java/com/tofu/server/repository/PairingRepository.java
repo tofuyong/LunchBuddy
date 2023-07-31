@@ -1,5 +1,7 @@
 package com.tofu.server.repository;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ public class PairingRepository {
     private static final String UPDATE_PAIRED_EMPLOYEE_ACCEPTED_SQL = "UPDATE pairing SET pairedEmployeeAccepted = ? WHERE pairingId = ?";
     private static final String DELETE_PAIRING_SQL = "DELETE FROM pairing WHERE pairingId = ?";
     private static final String GET_LAST_PAIRING_ID = "SELECT pairingId FROM pairing ORDER BY pairingId DESC LIMIT 1";
+    private static final String PAIRINGS_IN_LAST_SIX_MONTHS = "SELECT * FROM pairing WHERE (employeeId = ? AND pairedEmployeeId = ? OR employeeId = ? AND pairedEmployeeId = ?) AND pairingDate >= ?";
 
     public List<Pairing> getAllPairingsByEmployeeId(Integer employeeId) {
         return jdbcTemplate.query(GET_ALL_PAIRINGS_BY_EMPLOYEE_ID_SQL, BeanPropertyRowMapper.newInstance(Pairing.class), employeeId, employeeId);
@@ -73,6 +76,13 @@ public class PairingRepository {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    public Boolean hasPairedBeforeInLastSixMonths(Integer employeeId1, Integer employeeId2) {
+        List<Pairing> pairs = jdbcTemplate.query(PAIRINGS_IN_LAST_SIX_MONTHS, BeanPropertyRowMapper.newInstance(Pairing.class), 
+                                                employeeId1, employeeId2, employeeId2, employeeId1, 
+                                                LocalDate.now().minus(6, ChronoUnit.MONTHS));
+        return !pairs.isEmpty();
     }
 
 }
