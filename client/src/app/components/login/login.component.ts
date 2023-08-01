@@ -9,18 +9,26 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class LoginComponent {
   username!: string;
-  password!: string;
+  // password!: string;
   errorMessage: string = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  login() {
-    // Call authentication service to perform the login
-    const loginSuccessful = this.authService.login(this.username, this.password);
-    if (loginSuccessful) {
-      this.router.navigate(['/dashboard']);
-    } else {
-      this.errorMessage = 'Invalid ID, please try again';
+  async login() {
+    try {
+      const loginSuccessful = await this.authService.login(this.username);
+      if (loginSuccessful) {
+        this.router.navigate(['/dashboard']);
+      } else {
+        this.errorMessage = 'Invalid ID, please try again';
+      }
+    } catch (error) {
+      this.errorMessage = 'An error occurred during login, please try again';
     }
   }
+
+  signup(){
+    this.router.navigate(['/signup']);
+  }
+
 }

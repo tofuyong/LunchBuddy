@@ -4,12 +4,17 @@
     <div>
       <label for="username">Username:</label>
       <input type="text" id="username" [(ngModel)]="username" name="username" required>
+      <button type="submit">Login</button>
     </div>
-    <div>
+    <!-- <div>
       <label for="password">Password:</label>
       <input type="password" id="password" [(ngModel)]="password" name="password" required>
-    </div>
-    <button type="submit">Login</button>
+    </div> -->
     <p *ngIf="errorMessage" class="error">{{errorMessage}}</p>
   </form>
+</div>
+
+<div class="signup-container">
+  <h2>Don't have an account?</h2>
+  <button type="button" (click)="signup()">Sign up now!</button>
 </div>
