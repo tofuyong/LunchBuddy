@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EmployeeService } from 'src/app/services/employee.service';
+import { EmployeeIdValidator } from 'src/app/validators/employeeId-validator';
 
 @Component({
   selector: 'app-signup',
@@ -21,7 +22,7 @@ export class SignupComponent implements OnInit {
 
   createForm() {
     return this.fb.group({
-      employeeId: this.fb.control('', Validators.required ),
+      employeeId: this.fb.control('', [Validators.required, Validators.maxLength(8), EmployeeIdValidator.NumbersOnly]),
       isFinding: this.fb.control('false' ),
       firstName: this.fb.control('', Validators.required ),
       lastName: this.fb.control('', Validators.required ),
@@ -31,6 +32,11 @@ export class SignupComponent implements OnInit {
       department: this.fb.control('', Validators.required ),
       title: this.fb.control('', Validators.required )
     }); 
+  }
+
+  hasError(input: string): boolean {
+    const formControl = this.signUpForm.get(input);
+    return !!(formControl?.invalid && formControl?.dirty && formControl?.touched)
   }
 
   onSubmit() {

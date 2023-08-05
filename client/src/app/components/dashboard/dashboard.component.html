@@ -1,1 +1,25 @@
-<p>dashboard works!</p>
+<h2>About Me</h2>
+
+<h2>Hobbies</h2>
+
+<h2>Successful Matches</h2>
+
+<h2>Requests</h2>
+<button type="button" (click)="newRequest()">New Request</button>
+
+<div>
+    <ng-container *ngIf="requests?.length; else noRequests">
+        <div *ngFor="let request of requests" class="request-box">
+            <p>Request ID: {{request.requestId}}</p>
+            <p>Preferred Date: {{request.preferredDate}}</p>
+            <p>Preferred Time: {{request.preferredTime}}</p>
+            <p>Preferred Gender: {{request.preferredGender}}</p>
+            <p>Is Matched?: {{request.isMatched}}</p>
+        </div>
+    </ng-container>
+    <ng-template #noRequests>
+        <tr>
+            <td colspan="8"><i>No active requests</i></td>
+        </tr>
+    </ng-template>
+</div>

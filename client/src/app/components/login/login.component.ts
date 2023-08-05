@@ -8,7 +8,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  username!: string;
+  employeeId!: string;
   // password!: string;
   errorMessage: string = '';
 
@@ -16,9 +16,9 @@ export class LoginComponent {
 
   async login() {
     try {
-      const loginSuccessful = await this.authService.login(this.username);
+      const loginSuccessful = await this.authService.login(this.employeeId);
       if (loginSuccessful) {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard', this.employeeId]);
       } else {
         this.errorMessage = 'Invalid ID, please try again';
       }

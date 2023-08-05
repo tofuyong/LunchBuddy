@@ -1,3 +1,7 @@
 .success {
     color: turquoise;
 }
+
+.error {
+    color: red;
+}
