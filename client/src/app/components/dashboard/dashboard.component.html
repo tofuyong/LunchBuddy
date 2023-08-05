@@ -1,6 +1,23 @@
 <h2>About Me</h2>
+<div>
+    <ng-container *ngIf="employee">
+        <p>{{employee.salutation}} {{employee.firstName}} {{employee.lastName}}</p>
+        <!-- <p>Employee ID: {{employee.employeeId}}</p> -->
+        <p>Gender: {{employee.gender}}</p>
+        <p>Email: {{employee.email}}</p>
+        <p>Department: {{employee.department}}</p>
+        <p>Title: {{employee.title}}</p>
+    </ng-container>
+</div>
 
 <h2>Hobbies</h2>
+<div>
+    <ng-container *ngIf="hobbies?.length">
+        <div *ngFor="let hobby of hobbies" class="hobby-box">
+            <p>{{ hobby }}</p>
+        </div>
+    </ng-container>
+</div>
 
 <h2>Successful Matches</h2>
 
