@@ -20,7 +20,7 @@ public class HobbyRepository {
     private static final String GET_HOBBY_BY_ID_SQL = "SELECT * from hobby where hobbyId = ?";
     private static final String INSERT_HOBBY_SQL = "INSERT INTO hobby (hobbyId, hobby, employeeId) VALUES (?, ?, ?)";
     private static final String UPDATE_HOBBY_SQL = "UPDATE hobby SET hobby = ? WHERE hobbyId = ?";
-    private static final String DELETE_HOBBY_SQL = "DELETE FROM hobby WHERE hobbyId = ?";
+    private static final String DELETE_HOBBY_SQL = "DELETE FROM hobby WHERE hobby = ?";
     private static final String GET_LAST_HOBBY_ID_BY_EMPLOYEE_SQL = "SELECT hobbyId FROM hobby WHERE employeeId = ? ORDER BY hobbyId DESC LIMIT 1";
 
     public List<Hobby> getAllHobbiesByEmployeeId(Integer employeeId) {
@@ -43,9 +43,9 @@ public class HobbyRepository {
         return iResult > 0 ? true : false;
     }
 
-    public Boolean deleteHobby(String hobbyId) {
+    public Boolean deleteHobby(String hobby) {
         int iResult = 0;
-        iResult = jdbcTemplate.update(DELETE_HOBBY_SQL, hobbyId);
+        iResult = jdbcTemplate.update(DELETE_HOBBY_SQL, hobby);
         return iResult > 0 ? true : false;
     }
 

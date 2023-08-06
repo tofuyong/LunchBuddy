@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, MinLengthValidator, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, min } from 'rxjs';
 import { Employee } from 'src/app/models/employee';
 import { Request } from 'src/app/models/request';
 import { EmployeeService } from 'src/app/services/employee.service';
@@ -18,10 +19,13 @@ export class DashboardComponent implements OnInit {
   param$!: Subscription;
   requests!: Request[];
   hobbies!: [string];
+  addHobbyForm!: FormGroup;
+  errorMsg!: string;
+
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute,
       private reqSvc: RequestService, private empSvc: EmployeeService,
-      private hobbySvc: HobbyService) { }
+      private hobbySvc: HobbyService, private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.param$ = this.activatedRoute.params.subscribe(
@@ -39,6 +43,7 @@ export class DashboardComponent implements OnInit {
           }
         );
         // Hobbies
+        this.addHobbyForm = this.createForm();
         this.hobbySvc.getAllHobbies(this.employeeId)
           .then(
             (response) => {
@@ -77,5 +82,51 @@ export class DashboardComponent implements OnInit {
   newRequest() {
     this.router.navigate(['/request', this.employeeId]);
   }
+
+  createForm() {
+    return this.fb.group({
+      hobby: this.fb.control('', [Validators.required, Validators.minLength(3)]),
+      employeeId: this.employeeId
+    }); 
+  }
+
+  async onSubmit() {
+    if (this.addHobbyForm.valid) {
+      const hobby = this.addHobbyForm.value;
+      try {
+        const existingHobbies = await this.hobbySvc.getAllHobbies(this.employeeId);
+        const hobbyExists = existingHobbies.includes(hobby.hobby);
+        if (hobbyExists) {
+          console.log('Hobby already exists in the database.');
+          this.errorMsg = "Hobby already exists."
+        } else {
+          await this.hobbySvc.addHobby(hobby);
+          console.log('Successfully added new hobby');
+          this.hobbies.push(hobby.hobby);
+          this.addHobbyForm.reset();
+        }
+      }
+      catch (error) {
+        console.log('Error while sending to server', error);
+      }
+    }
+  }
+
+  delete(hobby: any) {
+    const index = this.hobbies.indexOf(hobby);
+    if (index !== -1) {
+    this.hobbies.splice(index, 1); // Remove hobby from the hobbies array
+    this.hobbySvc.deleteHobby(hobby)
+      .then(
+        () => {
+          console.log('Successfully deleted hobby from the database.');
+        },
+        error => {
+          console.log('Error while deleting hobby from the database', error);
+        }
+      );
+    }
+  }
+  
 
 }

@@ -11,17 +11,22 @@
 </div>
 
 <h2>Hobbies</h2>
-<div>
+<div class="hobby-box">
     <ng-container *ngIf="hobbies?.length">
-        <div *ngFor="let hobby of hobbies" class="hobby-box">
-            <p>{{ hobby }}</p>
+        <div *ngFor="let hobby of hobbies">
+            <p><button type="button" (click)="delete(hobby)">X</button> {{ hobby }}</p>
         </div>
+        <form [formGroup]="addHobbyForm" (ngSubmit)="onSubmit()">
+            <input type="text" formControlName="hobby"
+            placeholder="Hobby e.g. Cooking"><button type="submit">Add</button>
+            <p *ngIf="errorMsg" class="error">{{ errorMsg }}</p>
+        </form>
     </ng-container>
 </div>
 
 <h2>Successful Matches</h2>
 
-<h2>Requests</h2>
+<h2>Open Requests</h2>
 <button type="button" (click)="newRequest()">New Request</button>
 
 <div>

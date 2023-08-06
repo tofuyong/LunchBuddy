@@ -47,7 +47,7 @@ export class RequestComponent implements OnInit{
           console.log('Error while sending to server', error);
         }
       );
+      this.router.navigate(['/dashboard', this.employeeId]);
     } 
-    this.router.navigate(['/dashboard', this.employeeId]);
   }
 }

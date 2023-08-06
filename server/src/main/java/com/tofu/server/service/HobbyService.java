@@ -42,8 +42,8 @@ public class HobbyService {
         return hobbyRepo.updateHobby(hobby, hobbyId);
     }
 
-    public Boolean deleteHobby(String hobbyId) {
-        return hobbyRepo.deleteHobby(hobbyId);
+    public Boolean deleteHobby(String hobby) {
+        return hobbyRepo.deleteHobby(hobby);
     }
     
 }

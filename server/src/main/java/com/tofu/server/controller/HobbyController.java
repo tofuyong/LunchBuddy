@@ -61,9 +61,9 @@ public class HobbyController {
         }
     }
 
-    @DeleteMapping("/delete/{hobbyId}")
-    public ResponseEntity<Boolean> deleteHobby(@PathVariable String hobbyId) {
-        boolean isDeleted = hobbySvc.deleteHobby(hobbyId);
+    @DeleteMapping("/delete")
+    public ResponseEntity<Boolean> deleteHobby(@RequestParam String hobby) {
+        boolean isDeleted = hobbySvc.deleteHobby(hobby);
         if (isDeleted) {
             return ResponseEntity.ok(true);  
         } else {

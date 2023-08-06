@@ -1,5 +1,17 @@
 .request-box {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  width: 20%;
+}
+
+.hobby-box {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  width: 20%;
+}
+
+.error {
+  color: red;
+}
