@@ -3,9 +3,11 @@ import { FormBuilder, FormGroup, MinLengthValidator, Validators } from '@angular
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, min } from 'rxjs';
 import { Employee } from 'src/app/models/employee';
+import { Pairing } from 'src/app/models/pairing';
 import { Request } from 'src/app/models/request';
 import { EmployeeService } from 'src/app/services/employee.service';
 import { HobbyService } from 'src/app/services/hobby.service';
+import { PairingService } from 'src/app/services/pairing.service';
 import { RequestService } from 'src/app/services/request.service';
 
 @Component({
@@ -16,16 +18,19 @@ import { RequestService } from 'src/app/services/request.service';
 export class DashboardComponent implements OnInit {
   employeeId!: string;
   employee!: Employee;
+  lunchBuddy!: Employee;
   param$!: Subscription;
   requests!: Request[];
   hobbies!: [string];
   addHobbyForm!: FormGroup;
   errorMsg!: string;
+  acceptedPairings!: Pairing[];
 
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute,
       private reqSvc: RequestService, private empSvc: EmployeeService,
-      private hobbySvc: HobbyService, private fb: FormBuilder) { }
+      private hobbySvc: HobbyService, private pairingSvc: PairingService,
+      private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.param$ = this.activatedRoute.params.subscribe(
@@ -53,6 +58,38 @@ export class DashboardComponent implements OnInit {
               console.log('Error while retrieving Hobbies', error);
             }
           )
+        // Upcoming Lunches
+        this.pairingSvc.getAllAcceptedPairings(this.employeeId)
+            .then(
+              (response) => {
+                const acceptedPairings = response;
+                this.acceptedPairings = [];
+                for (const pairing of acceptedPairings) {
+                  this.empSvc.getEmployee(pairing.pairedEmployeeId)
+                    .then(
+                      (employeeResponse: Employee) => {
+                        const acceptedPairing = new Pairing(
+                          pairing.pairingId, pairing.employeeId, pairing.pairedEmployeeId,
+                          pairing.pairingDate, pairing.lunchDate, pairing.lunchTime,
+                          pairing.lunchVenue, employeeResponse // Pass the employee object
+                        );
+                        this.acceptedPairings.push(acceptedPairing);
+                        console.log('Accepted Employee retrieved successfully.');
+                      },
+                      error => {
+                        console.log('Error while retrieving Accepted Employee', error);
+                      })
+                };
+                if (this.acceptedPairings.length === 0) {
+                  console.log('No accepted Pairings at the moment.');
+                }
+              },
+              error => {
+                console.log('Error while retrieving Pairings', error);
+                this.acceptedPairings = [];
+              }
+            )
+        
         // Requests
         this.reqSvc.getAllRequests(this.employeeId)
           .then(

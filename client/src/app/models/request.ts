@@ -5,8 +5,8 @@ export class Request {
         public requestId: string,
         public preferredDate: Date,
         public preferredTime: Time,
-        public preferredGender: String,
-        public employeeId: String,
-        public isMatched: Boolean
+        public preferredGender: string,
+        public employeeId: string,
+        public isMatched: boolean
     ) { };
 }
