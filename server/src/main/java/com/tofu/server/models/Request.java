@@ -30,4 +30,16 @@ public class Request {
     public Boolean getIsMatched() {return this.isMatched;}
     public void setIsMatched(Boolean isMatched) {this.isMatched = isMatched;}
 
+    @Override
+    public String toString() {
+        return "{" +
+            " requestId='" + getRequestId() + "'" +
+            ", preferredDate='" + getPreferredDate() + "'" +
+            ", preferredTime='" + getPreferredTime() + "'" +
+            ", preferredGender='" + getPreferredGender() + "'" +
+            ", employeeId='" + getEmployeeId() + "'" +
+            ", isMatched='" + getIsMatched() + "'" +
+            "}";
+    }
+
 }

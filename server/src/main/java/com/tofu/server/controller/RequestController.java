@@ -47,13 +47,14 @@ public class RequestController {
         }
     }
 
+    // MODIFIED THE INSERT REQUEST METHOD TO RETURN THE NEWLY CREATED REQUESTID
     @PostMapping("/add")
-    public ResponseEntity<Boolean> insertRequest(@RequestBody Request request) {
-        boolean isInserted = reqSvc.insertRequest(request);
-        if (isInserted) {
-            return ResponseEntity.ok(true);  
+    public ResponseEntity<String> insertRequest(@RequestBody Request request) {
+        String requestId = reqSvc.insertRequest(request);
+        if (requestId != null) {
+            return ResponseEntity.ok(requestId);  
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);  
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);  
         }
     }
     

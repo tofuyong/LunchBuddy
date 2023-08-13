@@ -132,7 +132,8 @@ export class DashboardComponent implements OnInit {
       const hobby = this.addHobbyForm.value;
       try {
         const existingHobbies = await this.hobbySvc.getAllHobbies(this.employeeId);
-        const hobbyExists = existingHobbies.includes(hobby.hobby);
+        const hobbyNames = existingHobbies.map((existingHobby: { hobby: any; }) => existingHobby.hobby);
+        const hobbyExists = hobbyNames.includes(hobby.hobby);
         if (hobbyExists) {
           console.log('Hobby already exists in the database.');
           this.errorMsg = "Hobby already exists."
@@ -140,7 +141,7 @@ export class DashboardComponent implements OnInit {
           await this.hobbySvc.addHobby(hobby);
           console.log('Successfully added new hobby');
           this.hobbies.push(hobby.hobby);
-          this.addHobbyForm.reset();
+          this.addHobbyForm.controls['hobby'].setValue('');
         }
       }
       catch (error) {

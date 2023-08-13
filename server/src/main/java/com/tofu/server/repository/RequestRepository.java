@@ -44,11 +44,11 @@ public class RequestRepository {
         return jdbcTemplate.queryForObject(GET_REQUEST_BY_ID_SQL, BeanPropertyRowMapper.newInstance(Request.class), requestId);
     }
 
-    public Boolean insertRequest(Request request) {
+    public String insertRequest(Request request) {
         int iCreated = 0;  
         iCreated = jdbcTemplate.update(INSERT_REQUEST_SQL, request.getRequestId(), request.getPreferredDate(), request.getPreferredTime(),
                     request.getPreferredGender(), request.getEmployeeId());
-        return iCreated > 0 ? true : false;
+        return iCreated > 0 ? request.getRequestId() : null;
     }
     
     public Boolean updateRequest(Request request, String requestId) {

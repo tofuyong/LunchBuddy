@@ -26,7 +26,7 @@ public class RequestService {
         return reqRepo.getRequest(requestId);
     }
 
-    public Boolean insertRequest(Request request) {
+    public String insertRequest(Request request) {
         Integer employeeId = request.getEmployeeId();
         // Create requestId
         String lastRequestId = reqRepo.getLastRequestIdByEmployeeId(employeeId);

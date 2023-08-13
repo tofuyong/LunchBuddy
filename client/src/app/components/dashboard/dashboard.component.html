@@ -12,25 +12,30 @@
 
 <h2>Hobbies</h2>
 <div class="hobby-box">
-    <ng-container *ngIf="hobbies?.length">
+    <ng-container *ngIf="hobbies?.length; else noHobbies">
         <div *ngFor="let hobby of hobbies">
             <p><button type="button" (click)="delete(hobby)">X</button> {{ hobby }}</p>
         </div>
-        <form [formGroup]="addHobbyForm" (ngSubmit)="onSubmit()">
-            <input type="text" formControlName="hobby"
-            placeholder="Hobby e.g. Cooking"><button type="submit">Add</button>
-            <p *ngIf="errorMsg" class="error">{{ errorMsg }}</p>
-        </form>
     </ng-container>
+    <ng-template #noHobbies>
+        <tr>
+            <td colspan="8"><i>No hobbies added</i></td>
+        </tr>
+    </ng-template>
+    <form [formGroup]="addHobbyForm" (ngSubmit)="onSubmit()">
+        <input type="text" formControlName="hobby"
+        placeholder="Hobby e.g. Cooking"><button type="submit">Add</button>
+        <p *ngIf="errorMsg" class="error">{{ errorMsg }}</p>
+    </form>
 </div>
 
 <h2>Upcoming Lunches!</h2>
 <div class="pairings-container">
     <ng-container *ngIf="acceptedPairings?.length; else noAcceptedPairings">
         <div *ngFor="let pairing of acceptedPairings" class="accepted-pairings-box">
-            <!-- <p>Pairing ID: {{ pairing.pairingId }}</p>
+            <p>Pairing ID: {{ pairing.pairingId }}</p>
             <p>Employee ID: {{ pairing.employeeId }}</p>
-            <p>Lunch Buddy ID: {{ pairing.pairedEmployeeId }}</p> -->
+            <p>Lunch Buddy ID: {{ pairing.pairedEmployeeId }}</p>
             <p>Date of Match: {{ pairing.pairingDate }}</p>
             <p>Lunch Date: {{ pairing.lunchDate }}</p>
             <p>Lunch Time: {{ pairing.lunchTime }}</p>

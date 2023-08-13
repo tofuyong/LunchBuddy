@@ -2,6 +2,8 @@ package com.tofu.server.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,8 @@ public class PairingController {
     
     @Autowired
     PairingService pairingSvc;
+
+    private static final Logger logger = LoggerFactory.getLogger(PairingService.class);
 
     @GetMapping("/all")
     public ResponseEntity<List<Pairing>> getAllPairingsByEmployeeId(@RequestParam int employeeId) {
@@ -92,6 +96,7 @@ public class PairingController {
     /*** Match & Create Pairing ***/
     @PostMapping("/findMatch")
     public ResponseEntity<Pairing> matchAndCreatePairing(@RequestBody Request request) {
+        logger.info("Controller Attempting to match and create pairing for request with ID: {}", request.getRequestId());
         Pairing newPairing = pairingSvc.matchAndCreatePairing(request);
         if (newPairing != null) {
             return ResponseEntity.ok(newPairing); 
