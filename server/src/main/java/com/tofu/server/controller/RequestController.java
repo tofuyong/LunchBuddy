@@ -37,6 +37,12 @@ public class RequestController {
         return ResponseEntity.ok(requests);
     }
 
+    @GetMapping("/allOpen")
+    public ResponseEntity<List<Request>> getAllOpenRequestsByEmployeeId(@RequestParam int employeeId) {
+        List<Request> requests = reqSvc.getAllOpenRequestsByEmployeeId(employeeId);
+        return ResponseEntity.ok(requests);
+    }
+
     @GetMapping("/details/{requestId}")
     public ResponseEntity<Request> getRequest(@PathVariable String requestId) {
         Request request = reqSvc.getRequest(requestId);

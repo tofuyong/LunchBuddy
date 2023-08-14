@@ -55,27 +55,7 @@ export class RequestComponent implements OnInit{
                   if (pairing.pairingId) {
                   console.log('Match found. PairingId: ', pairing.pairingId);
                   alert("Match found!");
-                  // Update Request's isMatched to true
-                  this.reqSvc.updateRequestIsMatchedToTrue(true, requestId)
-                    .then(
-                      (updateResponse) => {
-                        console.log('Request updated: isMatched set to true');
-                        // Update Paired Employee's isMatched to true
-                        this.reqSvc.updateRequestIsMatchedToTrue(true, pairing.pairedEmployeeId)
-                          .then(
-                            (updatePairedResponse) => {
-                              console.log('Paired Employee request updated: isMatched set to true');
-                              this.router.navigate(['/dashboard', this.employeeId]);
-                            },
-                            (updatePairedError) => {
-                              console.log('Error updating paired employee request:', updatePairedError);
-                            }
-                          );
-                      },
-                      (updateError) => {
-                        console.log('Error updating request:', updateError);
-                      }
-                    );
+                  this.router.navigate(['/dashboard', this.employeeId]);
                   } else {
                    console.log('No match found.');
                    this.router.navigate(['/dashboard', this.employeeId]);
@@ -96,62 +76,4 @@ export class RequestComponent implements OnInit{
         });
     } 
   }
-
 }
-
-
-// onSubmit() {
-//   if (this.requestForm.valid) {
-//     const requestDetails = this.requestForm.value;
-
-//     // Create new request
-//     this.reqSvc.addRequest(requestDetails)
-//       .then(
-//         (addResponse) => {
-//           console.log('Successfully added new request: ');
-
-//           // Find Match from existing pool of open Requests
-//           this.pairingSvc.findMatch(requestDetails)
-//             .then(
-//               (matchResponse) => {
-//                 if (matchResponse.pairingId) {
-//                   console.log('Match found. PairingId: ', matchResponse.pairingId);
-//                   alert("Match found!");
-
-//                   // Update Request's isMatched to true
-//                   this.reqSvc.updateRequestIsMatchedToTrue(true, addResponse.requestId)
-//                     .then(
-//                       (updateResponse) => {
-//                         console.log('Request updated: isMatched set to true');
-//                         // Update Paired Employee's isMatched to true
-//                         this.reqSvc.updateRequestIsMatchedToTrue(true, matchResponse.pairedEmployeeId)
-//                           .then(
-//                             (updatePairedResponse) => {
-//                               console.log('Paired Employee request updated: isMatched set to true');
-//                               this.router.navigate(['/dashboard', this.employeeId]);
-//                             },
-//                             (updatePairedError) => {
-//                               console.log('Error updating paired employee request:', updatePairedError);
-//                             }
-//                           );
-//                       },
-//                       (updateError) => {
-//                         console.log('Error updating request:', updateError);
-//                       }
-//                     );
-//                 } else {
-//                   console.log('No match found.');
-//                   this.router.navigate(['/dashboard', this.employeeId]);
-//                 }
-//               },
-//               (matchError) => {
-//                 console.log('Error while finding a match', matchError);
-//               }
-//             );
-//         },
-//         (addError) => {
-//           console.log('Error while adding request', addError);
-//         }
-//       );
-//   }
-// }

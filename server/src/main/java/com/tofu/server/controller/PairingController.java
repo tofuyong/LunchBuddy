@@ -42,6 +42,18 @@ public class PairingController {
         return ResponseEntity.ok(pairings);
     }
 
+    @GetMapping("/allPending")
+    public ResponseEntity<List<Pairing>> getPendingLBPairingsByEmployeeId(@RequestParam int employeeId) {
+        List<Pairing> pairings = pairingSvc.getPendingLBPairingsByEmployeeId(employeeId);
+        return ResponseEntity.ok(pairings);
+    }
+
+     @GetMapping("/allPendingYourAcceptance")
+    public ResponseEntity<List<Pairing>> getPendingYourAcceptancePairingsByEmployeeId(@RequestParam int employeeId) {
+        List<Pairing> pairings = pairingSvc.getPendingYourAcceptancePairingsByEmployeeId(employeeId);
+        return ResponseEntity.ok(pairings);
+    }
+
     @GetMapping("/details/{pairingId}")
     public ResponseEntity<Pairing> getPairing(@PathVariable String pairingId) {
         Pairing pairing = pairingSvc.getPairing(pairingId);
@@ -51,16 +63,6 @@ public class PairingController {
             return ResponseEntity.notFound().build(); 
         }
     }
-
-    // @PostMapping("/add")
-    // public ResponseEntity<Boolean> insertPairing(@RequestBody Pairing pairing) {
-    //     boolean isInserted = pairingSvc.insertPairing(pairing);
-    //     if (isInserted) {
-    //         return ResponseEntity.ok(true);  
-    //     } else {
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);  
-    //     }
-    // }
 
     @PutMapping("/updateEmployeeAccepted/{pairingId}")
     public ResponseEntity<Boolean> updatePairingEmployeeAccepted(@RequestBody Boolean employeeAccepted, @PathVariable String pairingId) {

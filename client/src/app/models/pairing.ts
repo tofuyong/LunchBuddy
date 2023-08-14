@@ -10,6 +10,7 @@ export class Pairing {
         public lunchDate: Date,
         public lunchTime: Time,
         public lunchVenue: string,
-        public pairedEmployee: Employee
+        public pairedEmployeeAccepted: Boolean,
+        public pairedEmployee: Employee //necessary?
     ) { };
 }

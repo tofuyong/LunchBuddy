@@ -56,8 +56,57 @@
 </div>
 
 <h2>Successful Matches - Awaiting Your acceptance</h2>
+<div class="pairings-container">
+    <ng-container *ngIf="pendingYourAcceptancePairings?.length; else noPendingYourAcceptancePairings">
+        <div *ngFor="let pairing of pendingYourAcceptancePairings" class="accepted-pairings-box">
+            <p>Pairing ID: {{ pairing.pairingId }}</p>
+            <p>Employee ID: {{ pairing.employeeId }}</p>
+            <p>Lunch Buddy ID: {{ pairing.pairedEmployeeId }}</p>
+            <p>Date of Match: {{ pairing.pairingDate }}</p>
+            <p>Lunch Date: {{ pairing.lunchDate }}</p>
+            <p>Lunch Time: {{ pairing.lunchTime }}</p>
+            <p>Lunch Venue: {{ pairing.lunchVenue }}</p>
+            <p><b>Lunch Buddy:</b></p>
+            <p>{{ pairing.pairedEmployee.salutation }} {{ pairing.pairedEmployee.firstName }} {{ pairing.pairedEmployee.lastName }}</p>
+            <p>Gender: {{ pairing.pairedEmployee.gender }}</p>
+            <p>Email: {{ pairing.pairedEmployee.email }}</p>
+            <p>Department: {{ pairing.pairedEmployee.department }}</p>
+            <p>Title: {{ pairing.pairedEmployee.title }}</p>
+            <button type="button" (click)="acceptPairing(pairing.pairingId)">Accept!</button>
+        </div>
+    </ng-container>
+    <ng-template #noPendingYourAcceptancePairings>
+        <tr>
+            <td colspan="8"><i>No pairings pending your acceptance</i></td>
+        </tr>
+    </ng-template>
+</div>
 
 <h2>Successful Matches - Awaiting Lunch Buddy's acceptance</h2>
+<div class="pairings-container">
+    <ng-container *ngIf="pendingPairings?.length; else noPendingPairings">
+        <div *ngFor="let pairing of pendingPairings" class="accepted-pairings-box">
+            <p>Pairing ID: {{ pairing.pairingId }}</p>
+            <p>Employee ID: {{ pairing.employeeId }}</p>
+            <p>Lunch Buddy ID: {{ pairing.pairedEmployeeId }}</p>
+            <p>Date of Match: {{ pairing.pairingDate }}</p>
+            <p>Lunch Date: {{ pairing.lunchDate }}</p>
+            <p>Lunch Time: {{ pairing.lunchTime }}</p>
+            <p>Lunch Venue: {{ pairing.lunchVenue }}</p>
+            <p><b>Lunch Buddy:</b></p>
+            <p>{{ pairing.pairedEmployee.salutation }} {{ pairing.pairedEmployee.firstName }} {{ pairing.pairedEmployee.lastName }}</p>
+            <p>Gender: {{ pairing.pairedEmployee.gender }}</p>
+            <p>Email: {{ pairing.pairedEmployee.email }}</p>
+            <p>Department: {{ pairing.pairedEmployee.department }}</p>
+            <p>Title: {{ pairing.pairedEmployee.title }}</p>
+        </div>
+    </ng-container>
+    <ng-template #noPendingPairings>
+        <tr>
+            <td colspan="8"><i>No pairings pending acceptance</i></td>
+        </tr>
+    </ng-template>
+</div>
 
 <h2>Open Requests</h2>
 <button type="button" (click)="newRequest()">New Request</button>

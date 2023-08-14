@@ -18,6 +18,7 @@ public class RequestRepository {
 
     private static final String GET_ALL_UNMATCHED_REQUESTS = "SELECT * from request where isMatched = false";
     private static final String GET_ALL_REQUESTS_BY_EMPLOYEE_ID_SQL = "SELECT * from request where employeeId = ?";
+    private static final String GET_ALL_OPEN_REQUESTS_BY_EMPLOYEE_ID_SQL = "SELECT * from request where isMatched = false AND employeeId = ?";
     private static final String GET_REQUEST_BY_ID_SQL = "SELECT * from request where requestId = ?";
     private static final String INSERT_REQUEST_SQL = """ 
                                                     INSERT INTO request 
@@ -38,6 +39,10 @@ public class RequestRepository {
 
     public List<Request> getAllRequestsByEmployeeId(Integer employeeId) {
         return jdbcTemplate.query(GET_ALL_REQUESTS_BY_EMPLOYEE_ID_SQL, BeanPropertyRowMapper.newInstance(Request.class), employeeId);
+    }
+
+    public List<Request> getAllOpenRequestsByEmployeeId(Integer employeeId) {
+        return jdbcTemplate.query(GET_ALL_OPEN_REQUESTS_BY_EMPLOYEE_ID_SQL, BeanPropertyRowMapper.newInstance(Request.class), employeeId);
     }
 
     public Request getRequest(String requestId) {

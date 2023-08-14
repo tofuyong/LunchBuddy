@@ -24,8 +24,9 @@ export class DashboardComponent implements OnInit {
   hobbies!: [string];
   addHobbyForm!: FormGroup;
   errorMsg!: string;
-  acceptedPairings!: Pairing[];
-
+  acceptedPairings: Pairing[] = [];
+  pendingPairings: Pairing[] = [];
+  pendingYourAcceptancePairings: Pairing[] = [];
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute,
       private reqSvc: RequestService, private empSvc: EmployeeService,
@@ -65,13 +66,14 @@ export class DashboardComponent implements OnInit {
                 const acceptedPairings = response;
                 this.acceptedPairings = [];
                 for (const pairing of acceptedPairings) {
-                  this.empSvc.getEmployee(pairing.pairedEmployeeId)
+                  // depending on whether employee is the former or later in the pair, the corresponding lunch buddy will be displayed
+                  this.empSvc.getEmployee(pairing.employeeId == this.employeeId ? pairing.pairedEmployeeId : pairing.employeeId)
                     .then(
                       (employeeResponse: Employee) => {
                         const acceptedPairing = new Pairing(
                           pairing.pairingId, pairing.employeeId, pairing.pairedEmployeeId,
                           pairing.pairingDate, pairing.lunchDate, pairing.lunchTime,
-                          pairing.lunchVenue, employeeResponse // Pass the employee object
+                          pairing.lunchVenue, pairing.pairedEmployeeAccepted, employeeResponse // Pass the employee object
                         );
                         this.acceptedPairings.push(acceptedPairing);
                         console.log('Accepted Employee retrieved successfully.');
@@ -80,7 +82,7 @@ export class DashboardComponent implements OnInit {
                         console.log('Error while retrieving Accepted Employee', error);
                       })
                 };
-                if (this.acceptedPairings.length === 0) {
+                if (this.acceptedPairings.length == 0) {
                   console.log('No accepted Pairings at the moment.');
                 }
               },
@@ -89,9 +91,72 @@ export class DashboardComponent implements OnInit {
                 this.acceptedPairings = [];
               }
             )
-        
-        // Requests
-        this.reqSvc.getAllRequests(this.employeeId)
+        // Await Your Acceptance
+        this.pairingSvc.getPendingYourAcceptancePairings(this.employeeId)
+          .then(
+            (response) => {
+              const pendingYourAcceptancePairings = response;
+              this.pendingYourAcceptancePairings = [];
+              for (const pairing of pendingYourAcceptancePairings) {
+                this.empSvc.getEmployee(pairing.employeeId) // Matched lunch buddy is the one represented by employeeId
+                  .then(
+                    (employeeResponse: Employee) => {
+                      const pendingPairing = new Pairing(
+                        pairing.pairingId, pairing.employeeId, pairing.pairedEmployeeId,
+                        pairing.pairingDate, pairing.lunchDate, pairing.lunchTime,
+                        pairing.lunchVenue, pairing.pairedEmployeeAccepted, employeeResponse // Pass the employee object
+                      );
+                      this.pendingYourAcceptancePairings.push(pendingPairing);
+                      console.log('Employee retrieved successfully.');
+                    },
+                    error => {
+                      console.log('Error while retrieving Employee', error);
+                    })
+              };
+              if (this.pendingPairings.length == 0) {
+                console.log('No Pairings pending your acceptance at the moment.');
+              }
+            },
+            error => {
+              console.log('Error while retrieving Pairings', error);
+              this.pendingPairings = [];
+            }
+          )
+
+        // Await Lunch Buddy Acceptance
+        this.pairingSvc.getPendingLBPairings(this.employeeId)
+          .then(
+            (response) => {
+              const pendingPairings = response;
+              this.pendingPairings = [];
+              for (const pairing of pendingPairings) {
+                this.empSvc.getEmployee(pairing.pairedEmployeeId)
+                  .then(
+                    (employeeResponse: Employee) => {
+                      const pendingPairing = new Pairing(
+                        pairing.pairingId, pairing.employeeId, pairing.pairedEmployeeId,
+                        pairing.pairingDate, pairing.lunchDate, pairing.lunchTime,
+                        pairing.lunchVenue, pairing.pairedEmployeeAccepted, employeeResponse // Pass the employee object
+                      );
+                      this.pendingPairings.push(pendingPairing);
+                      console.log('Pending Employee retrieved successfully.');
+                    },
+                    error => {
+                      console.log('Error while retrieving Pending Employee', error);
+                    })
+              };
+              if (this.pendingPairings.length == 0) {
+                console.log('No pending Pairings at the moment.');
+              }
+            },
+            error => {
+              console.log('Error while retrieving Pairings', error);
+              this.pendingPairings = [];
+            }
+          )
+
+        // Open Requests
+        this.reqSvc.getAllOpenRequests(this.employeeId)
           .then(
             (response) => {
               const requests = response;
@@ -103,7 +168,7 @@ export class DashboardComponent implements OnInit {
                 );
                 this.requests.push(req);
               }
-              if (this.requests.length === 0) {
+              if (this.requests.length == 0) {
                 console.log('No active requests at the moment.');
               }
             },
@@ -166,5 +231,17 @@ export class DashboardComponent implements OnInit {
     }
   }
   
+  acceptPairing(pairingId: any) {
+    this.pairingSvc.updatePairedEmployeeAccepted(true, pairingId)
+      .then(
+        () => {
+          console.log('Successfully updated paired employee accepted.');
+        },
+        error => {
+          console.log('Error updating paired employee accepted', error);
+        }
+      );
+    this.ngOnInit()
+  }
 
 }

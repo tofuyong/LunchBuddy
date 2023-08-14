@@ -10,6 +10,7 @@ export class RequestService {
   private ADD_REQUEST_URL = "api/request/add";
   private GET_REQUEST_BY_REQUEST_ID = "api/request/details/{requestId}"
   private GET_REQUESTS_BY_EMP_URL = "api/request/all";
+  private GET_OPEN_REQUESTS_BY_EMP_URL = "api/request/allOpen";
   private UPDATE_IS_MATCHED_TO_TRUE_URL = "api/request/updateMatch/{requestId}";
 
   constructor(private httpClient: HttpClient) { }
@@ -26,6 +27,11 @@ export class RequestService {
   getAllRequests(employeeId: string): Promise<any> {
     const params = new HttpParams().set('employeeId', employeeId);
     return firstValueFrom(this.httpClient.get(this.GET_REQUESTS_BY_EMP_URL, { params, responseType: 'json' }));
+  }
+
+  getAllOpenRequests(employeeId: string): Promise<any> {
+    const params = new HttpParams().set('employeeId', employeeId);
+    return firstValueFrom(this.httpClient.get(this.GET_OPEN_REQUESTS_BY_EMP_URL, { params, responseType: 'json' }));
   }
 
   updateRequestIsMatchedToTrue(isMatched: boolean, requestId: string): Promise<any> {

@@ -22,6 +22,10 @@ public class RequestService {
         return reqRepo.getAllRequestsByEmployeeId(employeeId);
     }
 
+    public List<Request> getAllOpenRequestsByEmployeeId(Integer employeeId) {
+        return reqRepo.getAllOpenRequestsByEmployeeId(employeeId);
+    }
+
     public Request getRequest(String requestId) {
         return reqRepo.getRequest(requestId);
     }

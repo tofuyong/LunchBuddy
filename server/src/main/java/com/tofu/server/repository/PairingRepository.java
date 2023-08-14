@@ -19,9 +19,15 @@ public class PairingRepository {
 
     private static final String GET_ALL_PAIRINGS_BY_EMPLOYEE_ID_SQL = "SELECT * from pairing where employeeId = ? OR pairedEmployeeId = ?";
     private static final String GET_ALL_ACCEPTED_PAIRINGS_BY_EMPLOYEE_ID_SQL = """
+                                                                            SELECT * FROM pairing WHERE  
+                                                                            pairedEmployeeAccepted = true AND employeeId = ? 
+                                                                            OR pairedEmployeeAccepted = true AND pairedEmployeeId = ?""";
+    private static final String GET_PENDING_LB_PAIRINGS_BY_EMPLOYEE_ID_SQL = """
                                                                             SELECT * FROM pairing WHERE employeeId = ? 
-                                                                            AND employeeAccepted = true AND
-                                                                            pairedEmployeeAccepted = true""";
+                                                                            AND pairedEmployeeAccepted = false""";
+    private static final String GET_PENDING_YOUR_ACCEPTANCE_PAIRINGS_BY_EMPLOYEE_ID_SQL = """
+                                                                                    SELECT * FROM pairing WHERE pairedEmployeeId = ? 
+                                                                                    AND pairedEmployeeAccepted = false""";                                                                                                                                     
     private static final String GET_PAIRING_BY_ID_SQL = "SELECT * from pairing where pairingId = ?";
     private static final String INSERT_PAIRING_SQL = """
                                                     INSERT INTO pairing (pairingId, employeeId, pairedEmployeeId, 
@@ -38,7 +44,15 @@ public class PairingRepository {
     }
 
     public List<Pairing> getAllAcceptedPairingsByEmployeeId(Integer employeeId) {
-        return jdbcTemplate.query(GET_ALL_ACCEPTED_PAIRINGS_BY_EMPLOYEE_ID_SQL, BeanPropertyRowMapper.newInstance(Pairing.class), employeeId);
+        return jdbcTemplate.query(GET_ALL_ACCEPTED_PAIRINGS_BY_EMPLOYEE_ID_SQL, BeanPropertyRowMapper.newInstance(Pairing.class), employeeId, employeeId);
+    }
+
+    public List<Pairing> getPendingLBPairingsByEmployeeId(Integer employeeId) {
+        return jdbcTemplate.query(GET_PENDING_LB_PAIRINGS_BY_EMPLOYEE_ID_SQL, BeanPropertyRowMapper.newInstance(Pairing.class), employeeId);
+    }
+
+     public List<Pairing> getPendingYourAcceptancePairingsByEmployeeId(Integer employeeId) {
+        return jdbcTemplate.query(GET_PENDING_YOUR_ACCEPTANCE_PAIRINGS_BY_EMPLOYEE_ID_SQL, BeanPropertyRowMapper.newInstance(Pairing.class), employeeId);
     }
 
     public Pairing getPairing(String pairingId) {
