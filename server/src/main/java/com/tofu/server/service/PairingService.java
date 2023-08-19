@@ -1,11 +1,9 @@
 package com.tofu.server.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.tofu.server.models.Pairing;
 import com.tofu.server.models.Request;
+import com.tofu.server.repository.EmployeeRepository;
 import com.tofu.server.repository.PairingRepository;
 import com.tofu.server.repository.RequestRepository;
 
@@ -26,6 +25,9 @@ public class PairingService {
 
     @Autowired
     RequestRepository reqRepo;
+
+    @Autowired
+    EmployeeRepository empRepo;
 
     private static final Logger logger = LoggerFactory.getLogger(PairingService.class);
 
@@ -78,13 +80,13 @@ public class PairingService {
         .filter(potentialMatch -> potentialMatch.getPreferredDate().equals(request.getPreferredDate())) // Same preferred date
         .filter(potentialMatch -> potentialMatch.getPreferredTime().equals(request.getPreferredTime())) // Same preferred time
         .filter(potentialMatch -> request.getPreferredGender().equals("No Preference") || 
-                                  potentialMatch.getPreferredGender().equals(request.getPreferredGender())) // Gender preference matches
+                                  request.getPreferredGender().equals(empRepo.getEmployeeGender(potentialMatch.getEmployeeId()))) // SOS: Gender preference matches
         // .filter(potentialMatch -> !pairingRepo.hasPairedBeforeInLastSixMonths(request.getEmployeeId(), potentialMatch.getEmployeeId()))  // Not paired in last six months
         .findFirst();  // Stop on the first match
 
     if(!optionalMatch.isPresent()) {
         logger.info("No match found");
-        return null;  // No match found
+        return null;
     }
 
     // Step 3: Retrieve the chosenMatch

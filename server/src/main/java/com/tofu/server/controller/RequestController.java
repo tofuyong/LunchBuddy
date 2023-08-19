@@ -53,14 +53,13 @@ public class RequestController {
         }
     }
 
-    // MODIFIED THE INSERT REQUEST METHOD TO RETURN THE NEWLY CREATED REQUESTID
     @PostMapping("/add")
     public ResponseEntity<String> insertRequest(@RequestBody Request request) {
-        String requestId = reqSvc.insertRequest(request);
+        String requestId = reqSvc.insertRequest(request); // method returns newly created requestId
         if (requestId != null) {
             return ResponseEntity.ok(requestId);  
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);  
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflicting Request Time");  
         }
     }
     

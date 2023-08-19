@@ -1,5 +1,6 @@
 package com.tofu.server.repository;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,11 @@ public class RequestRepository {
                                                     WHERE requestId = ?""";
     private static final String DELETE_REQUEST_SQL = "DELETE FROM request WHERE requestId = ?";
     private static final String GET_LAST_REQUEST_ID_BY_EMPLOYEE_SQL = "SELECT requestId FROM request WHERE employeeId = ? ORDER BY requestId DESC LIMIT 1";
+    private static final String GET_CONFLICTING_REQUESTS_BY_EMPLOYEE_ID_SQL = """
+                                                                            SELECT * FROM request 
+                                                                            WHERE (preferredTime = ? OR preferredTime = ?) 
+                                                                            AND preferredDate = ? AND employeeId = ? ;
+                                                                            """;
 
     public List<Request> getAllUnmatchedRequests() {
         return jdbcTemplate.query(GET_ALL_UNMATCHED_REQUESTS, BeanPropertyRowMapper.newInstance(Request.class));
@@ -80,6 +86,13 @@ public class RequestRepository {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    public List<Request> getConflictingRequests(Request request) {
+        LocalTime originalTime = request.getPreferredTime();
+        LocalTime newTime = originalTime.minusMinutes(30);
+        return jdbcTemplate.query(GET_CONFLICTING_REQUESTS_BY_EMPLOYEE_ID_SQL, BeanPropertyRowMapper.newInstance(Request.class), 
+            originalTime, newTime, request.getPreferredDate(), request.getEmployeeId());
     }
 
 }

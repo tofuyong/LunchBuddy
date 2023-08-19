@@ -1,6 +1,8 @@
 package com.tofu.server.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +50,7 @@ public class PairingController {
         return ResponseEntity.ok(pairings);
     }
 
-     @GetMapping("/allPendingYourAcceptance")
+    @GetMapping("/allPendingYourAcceptance")
     public ResponseEntity<List<Pairing>> getPendingYourAcceptancePairingsByEmployeeId(@RequestParam int employeeId) {
         List<Pairing> pairings = pairingSvc.getPendingYourAcceptancePairingsByEmployeeId(employeeId);
         return ResponseEntity.ok(pairings);
@@ -97,13 +99,15 @@ public class PairingController {
 
     /*** Match & Create Pairing ***/
     @PostMapping("/findMatch")
-    public ResponseEntity<Pairing> matchAndCreatePairing(@RequestBody Request request) {
+    public ResponseEntity<?> matchAndCreatePairing(@RequestBody Request request) {
         logger.info("Controller Attempting to match and create pairing for request with ID: {}", request.getRequestId());
         Pairing newPairing = pairingSvc.matchAndCreatePairing(request);
         if (newPairing != null) {
             return ResponseEntity.ok(newPairing); 
         } else {
-            return ResponseEntity.notFound().build(); 
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "No Match Found"); // so this dn show as error
+            return ResponseEntity.ok(response); 
         }
     }
     

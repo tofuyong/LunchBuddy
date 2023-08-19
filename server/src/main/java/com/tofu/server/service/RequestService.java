@@ -32,7 +32,11 @@ public class RequestService {
 
     public String insertRequest(Request request) {
         Integer employeeId = request.getEmployeeId();
-        // Create requestId
+        List<Request> conflictingRequests = reqRepo.getConflictingRequests(request);
+        if (!conflictingRequests.isEmpty()) {
+            return null; 
+        }
+
         String lastRequestId = reqRepo.getLastRequestIdByEmployeeId(employeeId);
         String newRequestId;
         if (lastRequestId != null) {

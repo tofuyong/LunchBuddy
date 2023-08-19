@@ -16,6 +16,7 @@ public class EmployeeRepository {
     JdbcTemplate jdbcTemplate;
 
     private static final String GET_EMPLOYEE_BY_ID_SQL = "SELECT * from employee where employeeId = ?";
+    private static final String GET_EMPLOYEE_GENDER_BY_ID_SQL = "SELECT gender from employee where employeeId = ?";
     private static final String INSERT_EMPLOYEE_SQL = """
                                                     INSERT INTO employee (employeeId, isFinding, firstName, lastName, 
                                                     salutation, gender, email, department, title) 
@@ -31,6 +32,13 @@ public class EmployeeRepository {
 
     public Employee getEmployee(Integer employeeId) {
         return jdbcTemplate.queryForObject(GET_EMPLOYEE_BY_ID_SQL, BeanPropertyRowMapper.newInstance(Employee.class), employeeId);
+    }
+
+    public String getEmployeeGender(Integer employeeId) {
+        // return jdbcTemplate.queryForObject(GET_EMPLOYEE_GENDER_BY_ID_SQL, BeanPropertyRowMapper.newInstance(String.class), employeeId);
+        String gender = jdbcTemplate.queryForObject(GET_EMPLOYEE_GENDER_BY_ID_SQL, String.class, employeeId);
+        System.out.println("Retrieved gender for employee " + employeeId + ": " + gender);
+        return gender;
     }
     
     public Boolean insertEmployee(Employee employee) {
